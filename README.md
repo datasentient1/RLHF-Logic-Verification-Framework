@@ -22,12 +22,42 @@ The current MVP is arithmetic-first and portfolio-oriented. It is designed to be
 ## Project Overview
 
 <p align="center">
-  <img src="docs/assets/project-plan-overview.png" alt="Rendered overview of the project brief with architecture, roadmap, and milestone visuals" width="900" />
+  <img src="docs/assets/project-brief/page-1.png" alt="Page 1 of the project brief showing the executive recommendation and project thesis" width="900" />
 </p>
 
 <p align="center">
-  <em>A recruiter-friendly project brief covering the system architecture, training loop, repository layout, timeline, and milestone dependencies.</em>
+  <em>Readable page-by-page project brief preview. The original stitched overview image was replaced because GitHub scaled it down too aggressively to be legible.</em>
 </p>
+
+<p align="center">
+  <a href="docs/visual_guide.md"><strong>Open Full Visual Guide</strong></a>
+  ·
+  <a href="docs/assets/project-brief/RLHF_Logic_Verification_Project_Plan.pdf"><strong>Open Project Brief PDF</strong></a>
+</p>
+
+<details>
+  <summary><strong>View All Project Brief Pages</strong></summary>
+
+  <p align="center">
+    <img src="docs/assets/project-brief/page-1.png" alt="Project brief page 1" width="900" />
+  </p>
+
+  <p align="center">
+    <img src="docs/assets/project-brief/page-2.png" alt="Project brief page 2" width="900" />
+  </p>
+
+  <p align="center">
+    <img src="docs/assets/project-brief/page-3.png" alt="Project brief page 3" width="900" />
+  </p>
+
+  <p align="center">
+    <img src="docs/assets/project-brief/page-4.png" alt="Project brief page 4" width="900" />
+  </p>
+
+  <p align="center">
+    <img src="docs/assets/project-brief/page-5.png" alt="Project brief page 5" width="900" />
+  </p>
+</details>
 
 ### At A Glance
 
@@ -217,6 +247,7 @@ notebooks/
 
 docs/
   colab_workflow.md
+  visual_guide.md
   roadmap.md
   resume_alignment.md
   data_contracts.md
