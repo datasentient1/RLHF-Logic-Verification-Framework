@@ -1,0 +1,38 @@
+<svg width="1200" height="760" viewBox="0 0 1200 760" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="760" rx="24" fill="#F7F8FC"/>
+  <rect x="44" y="36" width="1112" height="688" rx="20" fill="white" stroke="#D4D9E3"/>
+  <text x="76" y="94" fill="#1E2A3B" font-size="34" font-family="Arial, Helvetica, sans-serif" font-weight="700">Verifier-Guided Reasoning Demo Report</text>
+  <text x="76" y="128" fill="#4C5B6D" font-size="18" font-family="Arial, Helvetica, sans-serif">Snapshot of the generated Markdown report exported by the demo pipeline.</text>
+
+  <rect x="76" y="164" width="320" height="126" rx="18" fill="#EEF8F0" stroke="#B2DAB9"/>
+  <text x="100" y="202" fill="#1F6B3A" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="700">Final Accuracy</text>
+  <text x="100" y="256" fill="#184F2D" font-size="44" font-family="Arial, Helvetica, sans-serif" font-weight="700">100.00%</text>
+
+  <rect x="438" y="164" width="320" height="126" rx="18" fill="#EEF4FF" stroke="#BCD0F7"/>
+  <text x="462" y="202" fill="#2457A5" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="700">Verifier Pass Rate</text>
+  <text x="462" y="256" fill="#173A71" font-size="44" font-family="Arial, Helvetica, sans-serif" font-weight="700">75.00%</text>
+
+  <rect x="800" y="164" width="320" height="126" rx="18" fill="#FFF4E8" stroke="#F2C28A"/>
+  <text x="824" y="202" fill="#9A5700" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="700">Traces Evaluated</text>
+  <text x="824" y="256" fill="#6A3C00" font-size="44" font-family="Arial, Helvetica, sans-serif" font-weight="700">2</text>
+
+  <rect x="76" y="326" width="500" height="336" rx="18" fill="#FAFBFD" stroke="#D8DFEA"/>
+  <text x="104" y="366" fill="#22324A" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">Status Counts</text>
+  <text x="104" y="416" fill="#263445" font-size="24" font-family="Courier New, monospace">pass: 3</text>
+  <text x="104" y="454" fill="#8D2333" font-size="24" font-family="Courier New, monospace">fail: 1</text>
+  <text x="104" y="518" fill="#22324A" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">Error Counts</text>
+  <text x="104" y="568" fill="#263445" font-size="24" font-family="Courier New, monospace">numeric_inconsistency: 1</text>
+
+  <rect x="618" y="326" width="502" height="336" rx="18" fill="#FAFBFD" stroke="#D8DFEA"/>
+  <text x="646" y="366" fill="#22324A" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700">Trace Diagnostics</text>
+  <rect x="646" y="394" width="446" height="102" rx="14" fill="#EEF8F0" stroke="#B2DAB9"/>
+  <text x="668" y="428" fill="#1F6B3A" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="700">demo-good-1</text>
+  <text x="668" y="458" fill="#214233" font-size="17" font-family="Arial, Helvetica, sans-serif">source: openai/gsm8k</text>
+  <text x="668" y="484" fill="#214233" font-size="17" font-family="Arial, Helvetica, sans-serif">final = pass, failures = 0, errors = []</text>
+
+  <rect x="646" y="518" width="446" height="116" rx="14" fill="#FFF3F4" stroke="#F0BAC2"/>
+  <text x="668" y="552" fill="#8D2333" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="700">demo-bad-1</text>
+  <text x="668" y="582" fill="#4A2930" font-size="17" font-family="Arial, Helvetica, sans-serif">source: openai/gsm8k</text>
+  <text x="668" y="608" fill="#4A2930" font-size="17" font-family="Arial, Helvetica, sans-serif">final = pass, failures = 1</text>
+  <text x="668" y="632" fill="#4A2930" font-size="17" font-family="Arial, Helvetica, sans-serif">errors = ['numeric_inconsistency']</text>
+</svg>

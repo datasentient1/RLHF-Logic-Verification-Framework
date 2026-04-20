@@ -1,0 +1,23 @@
+stages:
+  prepare_demo_data:
+    cmd: python scripts/prepare_datasets.py --demo --output data/processed/demo_arithmetic.jsonl
+    deps:
+      - scripts/prepare_datasets.py
+      - src/verifier_guided_reasoning/datasets.py
+      - src/verifier_guided_reasoning/schemas.py
+      - params.yaml
+    outs:
+      - data/processed/demo_arithmetic.jsonl
+
+  run_demo_report:
+    cmd: python scripts/run_small_demo.py --input data/processed/demo_arithmetic.jsonl --output artifacts/eval/demo_summary.json --report-md artifacts/eval/demo_report.md
+    deps:
+      - scripts/run_small_demo.py
+      - data/processed/demo_arithmetic.jsonl
+      - src/verifier_guided_reasoning/arithmetic.py
+      - src/verifier_guided_reasoning/evaluation.py
+      - src/verifier_guided_reasoning/reporting.py
+      - src/verifier_guided_reasoning/tracking.py
+    outs:
+      - artifacts/eval/demo_summary.json
+      - artifacts/eval/demo_report.md

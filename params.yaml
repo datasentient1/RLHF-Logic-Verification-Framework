@@ -1,0 +1,26 @@
+project:
+  positioning: verifier_guided_process_supervision
+  primary_goal: recruiter_portfolio
+  compute_budget: colab_first
+
+datasets:
+  arithmetic_seed: MU-NLPC/Calc-svamp
+  arithmetic_benchmark: openai/gsm8k
+  logic_eval: tasksource/folio
+  logic_train: tasksource/proofwriter
+  logic_train_cap: 5000
+
+model:
+  base_model: Qwen/Qwen2.5-1.5B-Instruct
+  comparison_model: Qwen/Qwen2.5-Math-1.5B-Instruct
+  tuning_method: qlora
+  max_seq_length: 2048
+
+evaluation:
+  demo_samples: 32
+  best_of_n: 4
+  min_preference_margin: 0.20
+
+tracking:
+  mlflow_dir: /content/drive/MyDrive/rlhf_logic_verification/mlruns
+  dvc_remote_path: /content/drive/MyDrive/rlhf_logic_verification/dvc
