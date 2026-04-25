@@ -175,3 +175,81 @@ class QualityGateResult:
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
+
+
+@dataclass(slots=True)
+class ReviewRecord:
+    """One candidate model answer prepared for human review."""
+
+    review_id: str
+    prompt_id: str
+    prompt: str
+    source_dataset: str
+    split: str
+    model_name: str
+    candidate_id: str
+    raw_output: str
+    trace: dict[str, Any]
+    verifier_results: list[dict[str, Any]]
+    verifier_pass: bool
+    verifier_score: float
+    curator_action: str | None = None
+    curator_score: float | None = None
+    curator_notes: str | None = None
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    def validate(self) -> None:
+        self.review_id = _require_nonempty_str("review_id", self.review_id)
+        self.prompt_id = _require_nonempty_str("prompt_id", self.prompt_id)
+        self.prompt = _require_nonempty_str("prompt", self.prompt)
+        self.source_dataset = _require_nonempty_str("source_dataset", self.source_dataset)
+        self.split = _require_nonempty_str("split", self.split)
+        self.model_name = _require_nonempty_str("model_name", self.model_name)
+        self.candidate_id = _require_nonempty_str("candidate_id", self.candidate_id)
+        self.raw_output = _require_nonempty_str("raw_output", self.raw_output)
+        if not isinstance(self.trace, dict):
+            raise SchemaValidationError("trace must be a dict")
+        if not isinstance(self.verifier_results, list) or any(not isinstance(item, dict) for item in self.verifier_results):
+            raise SchemaValidationError("verifier_results must be a list[dict]")
+        if not isinstance(self.verifier_pass, bool):
+            raise SchemaValidationError("verifier_pass must be bool")
+        if not isinstance(self.verifier_score, (int, float)):
+            raise SchemaValidationError("verifier_score must be numeric")
+        self.verifier_score = float(self.verifier_score)
+        if self.curator_action is not None:
+            self.curator_action = _require_nonempty_str("curator_action", self.curator_action)
+        if self.curator_score is not None and not isinstance(self.curator_score, (int, float)):
+            raise SchemaValidationError("curator_score must be numeric or None")
+        if isinstance(self.curator_score, (int, float)):
+            self.curator_score = float(self.curator_score)
+        if self.curator_notes is not None and not isinstance(self.curator_notes, str):
+            raise SchemaValidationError("curator_notes must be a string or None")
+        if not isinstance(self.metadata, dict):
+            raise SchemaValidationError("metadata must be a dict")
+
+    def to_dict(self) -> dict[str, Any]:
+        self.validate()
+        return asdict(self)
+
+    @classmethod
+    def from_dict(cls, payload: Mapping[str, Any]) -> "ReviewRecord":
+        record = cls(
+            review_id=payload.get("review_id", ""),
+            prompt_id=payload.get("prompt_id", ""),
+            prompt=payload.get("prompt", ""),
+            source_dataset=payload.get("source_dataset", ""),
+            split=payload.get("split", ""),
+            model_name=payload.get("model_name", ""),
+            candidate_id=payload.get("candidate_id", ""),
+            raw_output=payload.get("raw_output", ""),
+            trace=dict(payload.get("trace", {})),
+            verifier_results=list(payload.get("verifier_results", [])),
+            verifier_pass=bool(payload.get("verifier_pass", False)),
+            verifier_score=float(payload.get("verifier_score", 0.0)),
+            curator_action=payload.get("curator_action"),
+            curator_score=payload.get("curator_score"),
+            curator_notes=payload.get("curator_notes"),
+            metadata=dict(payload.get("metadata", {})),
+        )
+        record.validate()
+        return record
