@@ -23,6 +23,45 @@ def build_preference_pair(
     return pair
 
 
+def build_preference_pair_from_responses(
+    prompt: str,
+    chosen_response: str,
+    rejected_response: str,
+    pair_source: str = "user_selected",
+) -> PreferencePair:
+    """Build a preference pair from raw response strings (for dataset pairs)."""
+    # Create minimal trace records from responses
+    chosen_trace = TraceRecord(
+        sample_id=f"user_chosen_{hash(chosen_response)}",
+        source_dataset="user_selected",
+        question=prompt,
+        steps=[],
+        final_answer=chosen_response,
+        gold_answer=None,
+        split="train",
+        metadata={"response": chosen_response},
+    )
+    
+    rejected_trace = TraceRecord(
+        sample_id=f"user_rejected_{hash(rejected_response)}",
+        source_dataset="user_selected",
+        question=prompt,
+        steps=[],
+        final_answer=rejected_response,
+        gold_answer=None,
+        split="train",
+        metadata={"response": rejected_response},
+    )
+    
+    return build_preference_pair(
+        prompt=prompt,
+        chosen_trace=chosen_trace,
+        rejected_trace=rejected_trace,
+        verifier_margin=0.0,  # No verifier margin for user selections
+        pair_source=pair_source,
+    )
+
+
 def mine_preference_pairs(
     candidate_groups: Iterable[list[tuple[TraceRecord, float]]],
     min_margin: float = 0.2,

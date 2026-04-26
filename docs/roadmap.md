@@ -35,6 +35,13 @@ This project is built as a verifier-guided reasoning system. The public story sh
 - polish the README, notebook, and demo report,
 - publish the adapter and dataset card only after the workflow is reproducible.
 
+#### Week 7-8 Implementation Snapshot
+
+- narrow logic extension added via `LogicTraceVerifier`,
+- separate logic benchmark summarization added via `summarize_logic_benchmark`,
+- notebook now includes a dedicated Week 7-8 logic section and publication gate checks,
+- dataset-card tooling added with artifact hashes and reproducibility gating.
+
 ## Stretch Path
 
 - DPO from verifier-derived preference pairs

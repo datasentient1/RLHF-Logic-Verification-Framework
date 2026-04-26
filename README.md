@@ -229,23 +229,34 @@ src/verifier_guided_reasoning/
   arithmetic.py         Deterministic arithmetic verifier
   datasets.py           Dataset transforms and quality gates
   evaluation.py         Benchmark-level summaries
+  logic.py              Narrow logic entailment verifier
+  logic_evaluation.py   Logic-only benchmark summaries
+  logic_pipeline.py     Logic demo orchestration
   preferences.py        Preference-pair construction helpers
+  publishing.py         Artifact hashing and dataset-card utilities
   reporting.py          Markdown + JSON report generation
   tracking.py           MLflow wrapper with local fallback
   pipeline.py           Small end-to-end demo orchestration
 
 scripts/
+  generate_review_batch.py   Build verifier-scored candidate review batches
+  export_curated_dataset.py  Export accepted SFT rows and preference pairs
+  run_sft.py                 Train a small SFT baseline from curated data
   prepare_datasets.py   Build a gated demo JSONL file
   run_small_demo.py     Run the verifier demo and export a report
+  run_logic_demo.py     Run the logic-extension verifier demo
+  build_dataset_card.py Create publish-ready dataset cards with artifact hashes
 
 tests/
   test_arithmetic_verifier.py
+  test_logic_extension.py
   test_dataset_transforms.py
 
 notebooks/
   colab_mvp_pipeline.ipynb
 
 docs/
+  section_0_project_explanation.md
   colab_workflow.md
   visual_guide.md
   roadmap.md

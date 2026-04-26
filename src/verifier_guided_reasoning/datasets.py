@@ -127,6 +127,56 @@ def normalize_calc_svamp_record(row: dict[str, Any], split: str = "train") -> Tr
     )
 
 
+def _coerce_premises(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return []
+        if "\n" in text:
+            return [line.strip() for line in text.splitlines() if line.strip()]
+        if " ; " in text or ";" in text:
+            return [part.strip() for part in text.split(";") if part.strip()]
+        return [text]
+    return []
+
+
+def normalize_folio_record(row: dict[str, Any], split: str = "train") -> TraceRecord:
+    premises = _coerce_premises(row.get("premises"))
+    hypothesis = str(row.get("hypothesis", "")).strip()
+    question = (
+        "Premises:\n"
+        + "\n".join(f"- {premise}" for premise in premises)
+        + ("\n" if premises else "")
+        + f"Hypothesis: {hypothesis}"
+    ).strip()
+
+    gold_label = str(row.get("label") or row.get("gold_answer") or "unknown").strip().lower()
+    predicted_label = str(row.get("prediction") or gold_label).strip().lower()
+
+    trace = TraceRecord(
+        sample_id=str(row.get("sample_id") or row.get("id") or hash(question)),
+        source_dataset=str(row.get("source_dataset") or "tasksource/folio"),
+        question=question,
+        steps=[
+            StepRecord(
+                step_id="s1",
+                text="Determine whether the hypothesis is entailed, contradicted, or unknown from the premises.",
+                operation="logic_label",
+                expression="premises => hypothesis",
+                computed_value=predicted_label,
+                depends_on=[],
+            )
+        ],
+        final_answer=predicted_label,
+        gold_answer=gold_label,
+        split=split,
+        metadata={"source_format": "folio_like", "premises": premises, "hypothesis": hypothesis},
+    )
+    return trace
+
+
 def gate_trace_record(trace: TraceRecord, verifier: ArithmeticTraceVerifier | None = None) -> QualityGateResult:
     verifier = verifier or ArithmeticTraceVerifier()
     reasons: list[str] = []
@@ -190,3 +240,86 @@ def build_demo_rows() -> list[dict[str, Any]]:
             "answer": "Maya saves 10 - 5 = <<10-5=15>>15 dollars.\n#### 15",
         },
     ]
+
+
+def build_logic_demo_rows() -> list[dict[str, Any]]:
+    return [
+        {
+            "id": "logic-demo-1",
+            "premises": [
+                "if alex studies then alex passes",
+                "alex studies",
+            ],
+            "hypothesis": "alex passes",
+            "label": "entailment",
+            "prediction": "entailment",
+        },
+        {
+            "id": "logic-demo-2",
+            "premises": [
+                "not hallway light on",
+            ],
+            "hypothesis": "hallway light on",
+            "label": "contradiction",
+            "prediction": "contradiction",
+        },
+        {
+            "id": "logic-demo-3",
+            "premises": [
+                "The road is wet",
+            ],
+            "hypothesis": "It is raining",
+            "label": "unknown",
+            "prediction": "entailment",
+        },
+    ]
+
+
+def load_gsm8k_subset(num_samples: int = 100, split: str = "train") -> list[dict[str, Any]]:
+    """Load a subset of GSM8K for lightweight testing."""
+    try:
+        from datasets import load_dataset
+    except ImportError:
+        raise ImportError("datasets library required. Install with 'pip install datasets'.")
+
+    dataset = load_dataset("openai/gsm8k", split=split)
+    return [row for row in dataset.take(num_samples)]
+
+
+def load_math_shepherd_pairs(num_samples: int = 100, split: str = "train") -> list[dict[str, Any]]:
+    """Load preference pairs from Math-Shepherd dataset for DPO training."""
+    try:
+        from datasets import load_dataset
+    except ImportError:
+        raise ImportError("datasets library required. Install with 'pip install datasets'.")
+
+    dataset = load_dataset("peiyi9979/Math-Shepherd", split=split)
+    pairs = []
+    for row in dataset.take(num_samples):
+        pairs.append({
+            "prompt": row["instruction"],
+            "chosen": row["output"],
+            "rejected": row["other_output"],
+            "source": "math_shepherd",
+        })
+    return pairs
+
+
+def load_hh_rlhf_pairs(num_samples: int = 100, split: str = "train") -> list[dict[str, Any]]:
+    """Load preference pairs from Anthropic HH-RLHF dataset."""
+    try:
+        from datasets import load_dataset
+    except ImportError:
+        raise ImportError("datasets library required. Install with 'pip install datasets'.")
+
+    dataset = load_dataset("Anthropic/hh-rlhf", split=split)
+    pairs = []
+    for row in dataset.take(num_samples):
+        # HH-RLHF has chosen and rejected responses
+        pairs.append({
+            "prompt": row["chosen"],
+            "chosen": row["chosen"],
+            "rejected": row["rejected"],
+            "source": "hh_rlhf",
+        })
+    return pairs
