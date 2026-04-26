@@ -1,23 +1,44 @@
-# RLHF-Logic-Verification-Framework
+# Verifier-Guided Reasoning Framework
 
 <p align="center">
-  <img src="https://img.shields.io/badge/status-arithmetic%20MVP-2EA44F" alt="Status: arithmetic MVP" />
+  <img src="https://img.shields.io/badge/status-DPO%20%2B%20curation%20ready-2EA44F" alt="Status: DPO + curation ready" />
   <img src="https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python 3.10+" />
   <img src="https://img.shields.io/badge/workflow-Colab--first-F9AB00?logo=googlecolab&logoColor=white" alt="Colab-first workflow" />
   <img src="https://img.shields.io/badge/tracking-DVC%20%2B%20MLflow-0F766E" alt="DVC and MLflow tracking" />
+  <img src="https://img.shields.io/badge/verification-Arithmetic%20%2B%20Logic-1F6FEB" alt="Arithmetic + Logic verification" />
   <img src="https://img.shields.io/badge/license-Apache%202.0-1F6FEB" alt="Apache 2.0 license" />
 </p>
 
-This repository keeps the original project name, but the implementation is deliberately scoped as a `verifier-guided process supervision` project rather than a full end-to-end RLHF platform.
+A **verifier-guided process supervision** framework that converts multi-step reasoning into structured traces, validates them with deterministic checks, and uses the diagnostics for data curation, evaluation, and preference learning.
 
-The core idea is simple:
+## What This Project Does
 
-1. convert reasoning examples into structured traces,
-2. verify each trace with explicit deterministic checks,
-3. use those verifier signals for dataset QA, evaluation, and later preference construction,
-4. keep the whole workflow reproducible in a Colab-first setup.
+Instead of treating model outputs as black-box answers, this framework:
 
-The current MVP is arithmetic-first and portfolio-oriented. It is designed to be technically honest, easy to demo, and strong enough to discuss in interviews without overclaiming formal verification or large-scale RLHF results.
+1. **Structures reasoning** into explicit step-by-step traces
+2. **Validates deterministically** with arithmetic and logic verifiers
+3. **Curates data quality** through automated gates and human review
+4. **Enables preference learning** from verifier-derived signals
+5. **Maintains reproducibility** with Colab-first workflows and artifact tracking
+
+### Core Innovation: Process Supervision
+
+The key insight is **step-level validation** rather than answer-only scoring. This enables:
+
+- **Automated quality gates** before training data acceptance
+- **Diagnostic failure analysis** for reasoning improvement
+- **Preference pair mining** from objective verifier margins
+- **Human curation workflows** with meaningful context
+
+### Current Capabilities
+
+✅ **Arithmetic Verification**: Structured math traces with step-by-step validation  
+✅ **Logic Extension**: FOL entailment checking with separate evaluation  
+✅ **DPO Training**: Preference learning from verifier-derived pairs  
+✅ **Dataset Integration**: Load and curate pairs from Math-Shepherd, HH-RLHF  
+✅ **Interactive Curation**: Jupyter widgets for preference pair selection  
+✅ **Colab-First Workflow**: Mount Drive, DVC tracking, MLflow logging  
+✅ **Data Contracts**: Structured schemas for traces, preferences, and reviews
 
 ## Project Overview
 
@@ -63,12 +84,41 @@ The current MVP is arithmetic-first and portfolio-oriented. It is designed to be
 
 | Area | Summary |
 |---|---|
-| Framing | Verifier-guided process supervision for reasoning traces |
-| MVP Domain | Arithmetic reasoning with structured steps |
-| Core Loop | `dataset -> trace schema -> verifier -> quality gate -> evaluation -> report` |
-| Primary Value | Step-level diagnostics instead of answer-only scoring |
-| Workflow | Colab-first, DVC-tracked artifacts, MLflow-compatible runs |
-| Stretch Path | Preference mining, DPO, Z3-backed checks, later formal logic work |
+| **Framing** | Verifier-guided process supervision for reasoning traces |
+| **MVP Domain** | Arithmetic reasoning with structured steps + logic extension |
+| **Core Loop** | `dataset → trace schema → verifier → quality gate → evaluation → report` |
+| **Primary Value** | Step-level diagnostics instead of answer-only scoring |
+| **Training Support** | SFT baselines + DPO from verifier-derived preferences |
+| **Data Curation** | Interactive preference pair selection from common datasets |
+| **Workflow** | Colab-first, DVC-tracked artifacts, MLflow-compatible runs |
+| **Stretch Path** | Z3-backed checks, formal logic work, advanced preference mining |
+
+### Key Features
+
+🔍 **Structured Trace Validation**
+- Convert raw responses into step-by-step reasoning traces
+- Validate arithmetic operations and logical entailments
+- Generate diagnostic reports for failure analysis
+
+🎯 **Data Quality Gates**
+- Automated filtering of low-quality reasoning traces
+- Schema validation and verifier-based acceptance criteria
+- Human review workflows with contextual feedback
+
+🎛️ **Interactive Curation Interface**
+- Load preference pairs from Math-Shepherd, HH-RLHF datasets
+- Override automatic preferences with human judgment
+- Export curated pairs for DPO training
+
+📊 **Preference Learning Pipeline**
+- Mine preference pairs from verifier score margins
+- Train DPO models on curated preference datasets
+- Compare SFT vs DPO performance on reasoning tasks
+
+🔄 **Reproducible Workflows**
+- Colab-first setup with Google Drive integration
+- DVC for data versioning, MLflow for experiment tracking
+- Artifact-based pipeline with clear data contracts
 
 ### Visual Overview
 
@@ -113,97 +163,213 @@ The visuals help communicate three things quickly:
 - the build has a realistic execution plan,
 - the codebase is organized around verifiable intermediate artifacts.
 
-## Demo Snapshot
+## Quick Start
 
-<table>
-  <tr>
-    <td width="50%" valign="top">
-      <strong>Colab / Notebook Flow</strong><br />
-      <img src="docs/assets/notebook-preview.svg" alt="Preview of the Colab MVP notebook showing install, tracking, and demo execution cells" />
-    </td>
-    <td width="50%" valign="top">
-      <strong>Generated Report Preview</strong><br />
-      <img src="docs/assets/demo-report-preview.svg" alt="Preview of the generated verifier-guided reasoning demo report with metrics and diagnostics" />
-    </td>
-  </tr>
-</table>
-
-<details>
-  <summary><strong>Quick Demo Run And Results</strong></summary>
-
-Run the smallest end-to-end demo with:
+### 1. Run Arithmetic Demo
 
 ```bash
-python3 scripts/prepare_datasets.py --demo --output data/processed/demo_arithmetic.jsonl
-python3 scripts/run_small_demo.py \
+# Prepare demo data
+python scripts/prepare_datasets.py --demo --output data/processed/demo_arithmetic.jsonl
+
+# Run verifier-guided evaluation
+python scripts/run_small_demo.py \
   --input data/processed/demo_arithmetic.jsonl \
   --output artifacts/eval/demo_summary.json \
   --report-md artifacts/eval/demo_report.md
 ```
 
-Sample report excerpt:
+### 2. Try DPO Training
 
-```text
-# Verifier-Guided Reasoning Demo Report
+```bash
+# Generate preference pairs from verifier scores
+python scripts/generate_dpo_pairs.py \
+  --model "Qwen/Qwen2.5-1.5B-Instruct" \
+  --num-prompts 50 \
+  --output data/processed/dpo_pairs.jsonl
 
-## Summary
-- Traces evaluated: 2
-- Final-answer accuracy: 100.00%
-- Mean verifier pass rate: 75.00%
-
-## Error Counts
-- numeric_inconsistency: 1
+# Train DPO model
+python scripts/run_dpo.py \
+  --pairs-file data/processed/dpo_pairs.jsonl \
+  --model "Qwen/Qwen2.5-1.5B-Instruct" \
+  --output-dir artifacts/models/dpo
 ```
 
-What this demonstrates:
+### 3. Interactive Preference Curation
 
-- the trace schema can represent step-level arithmetic reasoning,
-- the verifier can catch a bad intermediate computation even when the final answer field is parseable,
-- the pipeline exports both machine-readable and recruiter-friendly artifacts.
-</details>
+Open `notebooks/colab_mvp_pipeline.ipynb` in Colab and run the **Interactive Preference Pair Selection** section to:
+- Load pairs from Math-Shepherd or HH-RLHF datasets
+- Review and override automatic preferences
+- Export curated pairs for training
+
+## Architecture Overview
+
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <strong>Data Flow</strong><br />
+      <img src="docs/assets/system-architecture.svg" alt="System architecture showing data flow from datasets through verification to training" />
+      <br />
+      Datasets → Trace Schema → Verifier → Quality Gates → Training Data
+    </td>
+    <td width="50%" valign="top">
+      <strong>Training Options</strong><br />
+      <img src="docs/assets/training-options.svg" alt="Training pipeline showing SFT and DPO paths with verifier-derived preferences" />
+      <br />
+      SFT on accepted traces + DPO on preference pairs from verifier margins
+    </td>
+  </tr>
+</table>
+
+## Documentation
+
+📋 **[Project Explanation](docs/section_0_project_explanation.md)** - Technical overview and system design  
+📊 **[Data Contracts](docs/data_contracts.md)** - Schema definitions and validation rules  
+🎯 **[Resume Alignment](docs/resume_alignment.md)** - How this fits data curation and evaluation roles  
+🧭 **[Visual Guide](docs/visual_guide.md)** - System architecture and workflow diagrams  
+📝 **[Colab Workflow](docs/colab_workflow.md)** - Step-by-step Google Colab setup  
+🛣️ **[Roadmap](docs/roadmap.md)** - 8-week development plan and milestones  
+📖 **[Code Reference](docs/code_reference.md)** - API documentation and implementation details
 
 ## What This Project Is
 
-This project is a scaffold for building and evaluating reasoning systems that expose their intermediate steps as structured records.
+This project implements **verifier-guided process supervision** for reasoning systems.
 
-Instead of treating the model as a black box that emits a final answer, the project treats a response as a trace with:
+### Core Innovation
 
-- a problem statement,
-- a sequence of structured reasoning steps,
-- a final answer,
-- a verifier report describing whether the steps are consistent.
+Instead of black-box answer evaluation, the framework treats responses as **structured reasoning traces** with explicit intermediate steps that can be validated deterministically.
 
-That framing lets you do useful work before expensive model training:
+### Training Approaches
 
-- filter bad traces out of a candidate SFT dataset,
-- measure what kinds of reasoning failures occur,
-- compare prompted outputs against verifier-reranked outputs,
-- build preference pairs from verifier margins later.
+**Supervised Fine-Tuning (SFT):**
+- Filter reasoning traces through verifier quality gates
+- Train on accepted high-quality examples
+- Focus on step-by-step reasoning patterns
 
-## Why This Framing Matters
+**Direct Preference Optimization (DPO):**
+- Generate preference pairs from verifier score margins
+- Load and curate pairs from existing datasets (Math-Shepherd, HH-RLHF)
+- Optimize models to prefer verifier-approved reasoning
 
-The strongest version of this project is not “I built a frontier RLHF stack.”
+### Why This Matters
 
-The strongest version is:
+The strongest positioning is **data quality and process supervision** rather than "full RLHF":
 
-> I built a verifier-guided reasoning pipeline that turns multi-step answers into structured traces, checks those traces with explicit validators, and uses the resulting diagnostics for curation, evaluation, and training data improvement.
+> Built a verifier-guided reasoning pipeline that structures multi-step answers into validated traces, enables automated quality filtering, supports interactive preference curation, and provides diagnostic feedback for reasoning improvement.
 
-That story is more realistic for a Colab-first portfolio build, and it aligns much better with work in:
+This aligns with real ML engineering work in data curation, evaluation design, and iterative model improvement.
 
-- data curation,
-- process supervision,
-- rubric design,
-- logic/error diagnosis,
-- reasoning-focused evaluation.
+## DPO vs RLHF: Project Positioning
 
-## Current Scope
+### This Project is Primarily **Direct Preference Optimization (DPO)**
 
-The implemented codebase focuses on an arithmetic MVP.
+**Why DPO over RLHF:**
+- **No reward model training** - Preferences come directly from deterministic verifiers
+- **Simpler and more stable** - DPO trains one model instead of three (policy + reward + value)
+- **Verifier-derived preferences** - Objective quality signals rather than human labels
+- **Colab-compatible** - Lightweight enough for portfolio demonstration
 
-Included now:
+**DPO Implementation:**
+- Mine preference pairs from verifier score differences
+- Load curated pairs from existing datasets (Math-Shepherd, HH-RLHF)
+- Interactive curation interface for human oversight
+- Single-stage training with implicit reward modeling
 
-- canonical schemas for traces, steps, verifier outputs, quality gates, and preference pairs,
-- a deterministic arithmetic verifier,
+**Not Full RLHF:**
+- No PPO training loop with live environment interaction
+- No separate reward model training and deployment
+- No complex hyperparameter tuning for RL stability
+- Focus on preference learning from static datasets
+
+### Relationship to RLHF
+
+This project demonstrates the **data preparation and preference construction** phase of RLHF:
+- How to create high-quality preference datasets
+- How to validate reasoning quality deterministically  
+- How to combine automated and human curation
+- How to evaluate preference learning approaches
+
+The actual RLHF training (PPO, etc.) would be the next step for production systems, but DPO provides an excellent intermediate approach that's more accessible for research and portfolio work.
+
+## Current Status & Capabilities
+
+### ✅ Completed (Weeks 1-2 Core + DPO Implementation)
+
+**Verifier-Guided Pipeline:**
+- Structured trace schema with validation
+- Deterministic arithmetic verifier with step-level checks
+- Logic extension with FOL entailment verification
+- Quality gates for dataset filtering
+- Diagnostic reporting and failure analysis
+
+**Training & Curation:**
+- SFT training on accepted traces
+- DPO training with verifier-derived preferences
+- Interactive preference pair curation interface
+- Dataset integration (Math-Shepherd, HH-RLHF, GSM8K, Calc-SVAMP)
+- Colab-first workflow with Drive mounting
+
+**Infrastructure:**
+- DVC data versioning and MLflow experiment tracking
+- Reproducible artifact generation
+- Dataset card utilities for publication
+- Comprehensive test coverage
+
+### 🚧 Ready for Implementation (Weeks 3-4)
+
+**Data Pipeline Expansion:**
+- Full GSM8K and Calc-SVAMP normalization
+- Large-scale preference pair mining
+- Automated dataset quality assessment
+- Benchmark evaluation suites
+
+### 🔮 Future Extensions (Stretch Goals)
+
+**Advanced Verification:**
+- Z3-backed symbolic arithmetic checking
+- Lean/LeanDojo integration for formal proofs
+- Multi-modal reasoning verification
+
+**Production Features:**
+- Large-scale training orchestration
+- Web UI for curation workflows
+- API endpoints for model serving
+- Integration with existing ML platforms
+
+### Repository Tour
+
+```text
+src/verifier_guided_reasoning/
+  __init__.py           Public package exports
+  schemas.py            Canonical dataclasses and validation logic
+  arithmetic.py         Deterministic arithmetic verifier
+  datasets.py           Dataset transforms and quality gates
+  evaluation.py         Benchmark-level summaries
+  logic.py              Narrow logic entailment verifier
+  logic_evaluation.py   Logic-only benchmark summaries
+  logic_pipeline.py     Logic demo orchestration
+  preferences.py        Preference-pair construction helpers
+  publishing.py         Artifact hashing and dataset-card utilities
+  reporting.py          Markdown + JSON report generation
+  tracking.py           MLflow wrapper with local fallback
+  pipeline.py           Small end-to-end demo orchestration
+
+scripts/
+  generate_review_batch.py   Build verifier-scored candidate review batches
+  export_curated_dataset.py  Export accepted SFT rows and preference pairs
+  run_sft.py                 Train a small SFT baseline from curated data
+  prepare_datasets.py   Build a gated demo JSONL file
+  run_small_demo.py     Run the verifier demo and export a report
+  run_logic_demo.py     Run the logic-extension verifier demo
+  build_dataset_card.py Create publish-ready dataset cards with artifact hashes
+
+tests/
+  test_arithmetic_verifier.py
+  test_logic_extension.py
+  test_dataset_transforms.py
+
+notebooks/
+  colab_mvp_pipeline.ipynb
+```
 - dataset normalization helpers for GSM8K and Calc-SVAMP-like records,
 - benchmark summarization and report generation,
 - an MLflow wrapper with a local JSON fallback,
