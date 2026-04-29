@@ -13,8 +13,9 @@ class TrackingRun(AbstractContextManager["TrackingRun"]):
         self.tracker = tracker
         self.run_name = run_name
         self.run_dir = tracker.root_dir / tracker.experiment_name / run_name
-        self.run_dir.mkdir(parents=True, exist_ok=True)
         self._mlflow_run = None
+        if self.tracker.backend != "mlflow":
+            self.run_dir.mkdir(parents=True, exist_ok=True)
 
     def __enter__(self) -> "TrackingRun":
         if self.tracker.backend == "mlflow":
