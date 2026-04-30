@@ -360,6 +360,7 @@ scripts/
   prepare_datasets.py   Build a gated demo JSONL file
   run_small_demo.py     Run the verifier demo and export a report
   run_logic_demo.py     Run the logic-extension verifier demo
+  streamlit_annotator.py  Open the Streamlit annotation console for review records
   build_dataset_card.py Create publish-ready dataset cards with artifact hashes
 
 tests/
@@ -411,6 +412,7 @@ scripts/
   prepare_datasets.py   Build a gated demo JSONL file
   run_small_demo.py     Run the verifier demo and export a report
   run_logic_demo.py     Run the logic-extension verifier demo
+  streamlit_annotator.py  Open the Streamlit annotation console for review records
   build_dataset_card.py Create publish-ready dataset cards with artifact hashes
 
 tests/
