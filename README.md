@@ -36,7 +36,7 @@ The key insight is **step-level validation** rather than answer-only scoring. Th
 ✅ **Logic Extension**: FOL entailment checking with separate evaluation  
 ✅ **DPO Training**: Preference learning from verifier-derived pairs  
 ✅ **Dataset Integration**: Load and curate pairs from Math-Shepherd, HH-RLHF  
-✅ **Interactive Curation**: Jupyter widgets for preference pair selection  
+✅ **Interactive Curation**: Jupyter widgets plus a Streamlit review workbench for annotation and preference selection  
 ✅ **Colab-First Workflow**: Mount Drive, DVC tracking, MLflow logging  
 ✅ **Data Contracts**: Structured schemas for traces, preferences, and reviews
 
@@ -107,7 +107,7 @@ The key insight is **step-level validation** rather than answer-only scoring. Th
 
 🎛️ **Interactive Curation Interface**
 - Load preference pairs from Math-Shepherd, HH-RLHF datasets
-- Override automatic preferences with human judgment
+- Use notebook widgets or the Streamlit annotation workbench for human review and preference selection
 - Export curated pairs for DPO training
 
 📊 **Preference Learning Pipeline**
@@ -379,11 +379,9 @@ notebooks/
 
 Intentionally not treated as done:
 
-- DPO training,
 - Z3-backed symbolic verification,
 - Lean or LeanDojo integration,
 - large-scale training orchestration,
-- a production UI.
 
 Those belong to later phases once the arithmetic data path and verifier loop are stable.
 
